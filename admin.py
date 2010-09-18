@@ -3,7 +3,7 @@
 # maintainer rgaudin
 
 from django.contrib import admin
-from models import Point, AreaType, Area, CodedArea, FreeArea
+from models import Point, AreaType, Area
 
 
 class PointAdmin(admin.ModelAdmin):
@@ -14,19 +14,11 @@ class AreaTypeAdmin(admin.ModelAdmin):
     list_display = ('slug', 'name')
 
 
-class CodedAreaAdmin(admin.ModelAdmin):
-    list_display = ('code', 'name', 'kind', 'parent', 'location')
-    search_fields = ['code', 'name']
-    list_filter = ('parent', 'kind')
-
-
 class AreaAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'name', 'parent', 'location')
-    search_fields = ['name']
-    list_filter = ('parent',)
+    list_display = ('__unicode__', 'name', 'kind', 'location', 'code')
+    search_fields = ['code', 'name']
+    list_filter = ('kind', 'parent')
 
 admin.site.register(Point, PointAdmin)
 admin.site.register(AreaType, AreaTypeAdmin)
-admin.site.register(CodedArea, CodedAreaAdmin)
-admin.site.register(FreeArea, CodedAreaAdmin)
 admin.site.register(Area, AreaAdmin)

@@ -52,7 +52,7 @@ class Area(models.Model):
         if not self.parent:
             return self.name
         else:
-            return u"%(type)s de %(area)s" % {'type': self.kind.name, \
+            return u"%(type)s of %(area)s" % {'type': self.kind.name, \
                                              'area': self.name}
 
     def save(self, *args, **kwargs):

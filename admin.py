@@ -17,7 +17,7 @@ class AreaTypeAdmin(admin.ModelAdmin):
 class AreaAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'name', 'kind', 'location', 'code')
     search_fields = ['code', 'name']
-    list_filter = ('kind', 'parent')
+    list_filter = ('kind',)
 
 admin.site.register(Point, PointAdmin)
 admin.site.register(AreaType, AreaTypeAdmin)

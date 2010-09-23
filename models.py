@@ -6,6 +6,8 @@ import uuid
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from code_generator.fields import CodeField
+import mptt
 
 
 class Point(models.Model):
@@ -43,21 +45,24 @@ class Area(models.Model):
         verbose_name_plural = _("Areas")
 
     name = models.CharField(max_length=100)
-    code = models.CharField(max_length=50, blank=True, null=False)
+    code = CodeField(max_length=50, prefix='A', default='0', \
+                     min_length=3)
     kind = models.ForeignKey('AreaType', blank=True, null=True)
     location = models.ForeignKey(Point, blank=True, null=True)
-    parent = models.ForeignKey('Area', blank=True, null=True)
+    parent = models.ForeignKey('Area', blank=True, null=True, \
+                               related_name='children')
 
     def __unicode__(self):
-        if not self.parent:
+        ''' print Area name from its Kind
+
+        Example: name=Bamako, kind=District => District of Bamako '''
+
+        # don't add-in kind if kind name is already part of name.
+        if not self.parent \
+           or self.name.startswith(self.kind.name):
             return self.name
         else:
             return u"%(type)s of %(area)s" % {'type': self.kind.name, \
                                              'area': self.name}
 
-    def save(self, *args, **kwargs):
-        ''' generates a code if none provided '''
-        if not self.code:
-            # generate a uuid
-            self.code = uuid.uuid1().hex
-        super(Area, self).save(*args, **kwargs)
+mptt.register(Area, parent_attr='parent', order_insertion_by=['name'])

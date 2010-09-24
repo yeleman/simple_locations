@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # encoding=utf-8
-# maintainer: rgaudin
+# vim: ai ts=4 sts=4 et sw=4
 
 import uuid
 
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _, ugettext_lazy as __
 from code_generator.fields import CodeField
 import mptt
 
@@ -13,8 +13,8 @@ import mptt
 class Point(models.Model):
 
     class Meta:
-        verbose_name = _("Point")
-        verbose_name_plural = _("Points")
+        verbose_name = __("Point")
+        verbose_name_plural = __("Points")
 
     latitude = models.DecimalField(max_digits=13, decimal_places=10)
     longitude = models.DecimalField(max_digits=13, decimal_places=10)
@@ -27,22 +27,22 @@ class Point(models.Model):
 class AreaType(models.Model):
 
     class Meta:
-        verbose_name = _("Area Type")
-        verbose_name_plural = _("Area Types")
+        verbose_name = __("Area Type")
+        verbose_name_plural = __("Area Types")
 
     name = models.CharField(max_length=100)
     slug = models.CharField(max_length=30, unique=True)
 
     def __unicode__(self):
-        return self.name
+        return _(self.name)
 
 
 class Area(models.Model):
 
     class Meta:
         unique_together = ('code', 'kind')
-        verbose_name = _("Area")
-        verbose_name_plural = _("Areas")
+        verbose_name = __("Area")
+        verbose_name_plural = __("Areas")
 
     name = models.CharField(max_length=100)
     code = CodeField(max_length=50, prefix='A', default='0', \
@@ -62,7 +62,7 @@ class Area(models.Model):
            or self.name.startswith(self.kind.name):
             return self.name
         else:
-            return u"%(type)s of %(area)s" % {'type': self.kind.name, \
-                                             'area': self.name}
+            return _(u"%(type)s of %(area)s") % {'type': self.kind.name, \
+                                                 'area': self.name}
 
 mptt.register(Area, parent_attr='parent', order_insertion_by=['name'])

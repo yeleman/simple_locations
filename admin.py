@@ -15,7 +15,7 @@ class AreaTypeAdmin(admin.ModelAdmin):
 
 
 class AreaAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'name', 'kind', 'location', 'code')
+    list_display = ('__unicode__', 'name', 'kind', 'location', 'code', 'parent')
     search_fields = ['code', 'name']
     list_filter = ('kind',)
 

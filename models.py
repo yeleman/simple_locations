@@ -77,5 +77,5 @@ class Area(MPTTModel):
 
 if hasattr(mptt, 'register'):
     # django-mptt < 0.4
-    mptt.register(Node, **dict([(attr, getattr(Node.MPTTMeta, attr)) \
-                  for attr in dir(Node.MPTTMeta) if attr[:1] != '_']))
+    mptt.register(Area, **dict([(attr, getattr(Area.MPTTMeta, attr)) \
+                  for attr in dir(Area.MPTTMeta) if attr[:1] != '_']))

@@ -10,6 +10,13 @@ from code_generator.fields import CodeField
 import mptt
 
 
+try:
+    from mptt.models import MPTTModel
+except ImportError:
+    # django-mptt < 0.4
+    MPTTModel = models.Model
+
+
 class Point(models.Model):
 
     class Meta:
@@ -37,19 +44,22 @@ class AreaType(models.Model):
         return _(self.name)
 
 
-class Area(models.Model):
+class Area(MPTTModel):
 
     class Meta:
         unique_together = ('code', 'kind')
         verbose_name = __("Area")
         verbose_name_plural = __("Areas")
 
+    class MPTTMeta:
+        order_insertion_by = 'name'
+
     name = models.CharField(max_length=100)
     code = CodeField(max_length=50, prefix='A', default='0', \
                      min_length=3)
     kind = models.ForeignKey('AreaType', blank=True, null=True)
     location = models.ForeignKey(Point, blank=True, null=True)
-    parent = models.ForeignKey('Area', blank=True, null=True, \
+    parent = models.ForeignKey('self', blank=True, null=True, \
                                related_name='children')
 
     def __unicode__(self):
@@ -65,4 +75,7 @@ class Area(models.Model):
             return _(u"%(type)s of %(area)s") % {'type': self.kind.name, \
                                                  'area': self.name}
 
-mptt.register(Area, parent_attr='parent', order_insertion_by=['name'])
+if hasattr(mptt, 'register'):
+    # django-mptt < 0.4
+    mptt.register(Node, **dict([(attr, getattr(Node.MPTTMeta, attr)) \
+                  for attr in dir(Node.MPTTMeta) if attr[:1] != '_']))

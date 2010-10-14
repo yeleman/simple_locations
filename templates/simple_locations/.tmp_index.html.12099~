@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}Locations - {{ block.super }}{% endblock %}
+
+{% block stylesheets %}
+{{ block.super }}
+
+
+{% endblock %}
+
+{% block javascripts %}
+{{ block.super }}
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key={{map_key}}" type="text/javascript">
+</script>
+
+{{form.media}}
+{% endblock %}
+
+{% block content %}
+
+ <form action="/location/" method="post">
+{{form}}
+<input type="submit" value="submit" >
+</form>
+
+{% endblock %}

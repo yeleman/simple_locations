@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+{% block title %}Locations - {{ block.super }}{% endblock %}
+ {% load uni_form_tags %}
+ {% load forms_tags %}
+    
+    
+{% block stylesheets %}
+{{ block.super }}
+
+
+{% endblock %}
+
+{% block javascripts %}
+{{ block.super }}
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key={{map_key}}" type="text/javascript">
+</script>
+<script language="javascript">
+	//make sure map is a global variable
+	var map;
+  $(document).ready(function() {
+    
+    $("#tree a ").hover(function() { 
+	
+	
+	$(this).find('img').show();
+		},function(){ $(this).find('img').hide();}
+		
+	
+	
+	);
+       
+    });
+	
+	
+	function edit(area_id){
+		
+		
+		
+		
+		 $.ajax({
+        type: "GET",
+        url:"/simple_locations/edit/"+area_id,
+        dataType: "json",
+        success: function(data){
+			console.log(data);
+			var point = new GLatLng(parseFloat(data['lat']),parseFloat(data['lon']));
+			$('#id_name')[0].value=data['name'];
+             $('#id_code')[0].value=data['code'];
+			 
+			map.setCenter(point,4);
+			
+           
+				
+		
+		
+		
+	}
+	
+	
+	});
+	
+	}
+	
+
+
+</script>
+{{form.media}}
+{% endblock %}
+
+
+{% block content %}
+<div class="two-columns">
+	<table width="100%" class="form_table"> 
+	<thead> 
+    <tr> 
+      <th class="form_name_col">Location Tree</th> 
+      <th class="form_description_col">Edit Location</th> 
+       <tbody>
+       	<form action="/simple_locations/" method="post">
+       	<tr class="form_table_row">
+       		<td>
+       			<div>
+       			{{form.location}}
+				</div>
+				</td>
+			<td> 
+			
+			
+		<ul style="list-style:none;">
+		<li>Name: {{form.name}}</li>
+		<li>Code: {{form.code}}</li>
+		</ul>
+		
+		
+			
+			</td>
+       		</tr>
+			<tr class="form_table_row">
+				<td colspan=2>
+				{{form.point}}
+				
+				</td>
+			</tr>
+			<tr><center></center><td colspan=2><input type="submit" value="Update"></input></td></center></tr>
+       	 </tbody>
+		 </form>
+    </tr> 
+  </thead> 
+  </table>
+ 
+	
+	</div>
+	
+	{% endblock %}
+	
+
+
+
+
+
+

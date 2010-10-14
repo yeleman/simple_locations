@@ -1,0 +1,64 @@
+#tree a{
+	
+	text-transform:Capitalize;
+	font-size:16px;
+	
+	}
+
+#tree ul, #tree li { 
+display:block;
+list-style-type:none;
+
+}
+#tree li { 
+display:block;
+margin-left:18px;
+background:url(tree-default-line.gif) -7px 0px no-repeat;
+padding-left:2px;
+margin-left: -16px;
+
+
+}
+
+#tree ul { 
+white-space:nowrap;
+
+
+}
+
+.hidden{
+	 display:none;
+	 }
+
+ul.hidden{
+	
+	display:none;
+	}
+.display{
+	
+	display:block;
+	padding:0 0 0 0;
+	margin:0 0 0 0;
+	
+	}
+
+.tree-open > ul { display:block;
+} 
+#tree a:focus { 
+	outline: none; 
+	}
+body > *[selected="true"] {
+    display: block;
+}
+
+input.text{
+  margin:0.5em 0;
+  width: 300px; padding:5px; 
+}
+.scrollable {
+display:block;
+height:305px;
+width:100%;
+overflow:auto;
+border:#dddddd 1px solid;
+}

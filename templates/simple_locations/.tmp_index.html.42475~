@@ -1,0 +1,126 @@
+{% extends "layout-split-2.html" %}
+{% block title %}
+    Locations - {{ block.super }}
+{% endblock %}
+
+
+
+{% block stylesheets %}
+    {{ block.super }}
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ block.super }}
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key={{map_key}}"
+            type="text/javascript">
+    </script>
+    <script src="{{MEDIA_URL}}simple_locations/javascripts/simple_locations.js" type="text/javascript">
+    </script>
+    <script language="javascript">
+        //make sure map is a global variable
+        var map;
+        $(document).ready(function() {
+
+            $("#tree a ").hover(function() {
+
+
+                $(this).find('img').show();
+            }, function() {
+                $(this).find('img').hide();
+            }
+
+
+                    );
+
+        });
+
+
+    </script>
+
+    {{ form.media }}
+
+    <link rel="stylesheet" href="{{ MEDIA_URL }}simple_locations/uni_form/uni-form.css" type="text/css"/>
+    <link rel="stylesheet" href="{{ MEDIA_URL }}simple_locations/uni_form/default.uni-form.css" type="text/css"/>
+    <script src="{{ MEDIA_URL }}simple_locations/uni_form/uni-form.jquery.js" type="text/javascript"></script>
+{% endblock %}
+
+{% block left %}
+
+
+
+
+    <div class="module" style="min-height:220px;">
+        {{ form.errors }}
+        <form method="post" action="/simple_locations/edit/" style="border:0px;">
+            <h2>All Locations</h2>
+
+            <div class="scrollable">
+
+
+                {{ form.location }}
+                {{ form.pk }}
+
+            </div>
+
+
+    </div>
+    <div class="module" style="width:800px; clear:both;float:left;margin-top:10px;">
+        <h2 style="width:800px;">Location Details</h2>
+
+
+        {{ form.point }}
+    </div>
+
+{% endblock %}
+
+{% block right %}
+    <div class="module">
+        <h2>Map</h2>
+
+        <table border='0' width="100%" class="form_table">
+            <tr>
+                <td>Name:</td>
+                <td>{{ form.name }}</td>
+            </tr>
+            <tr>
+                <td>Code:</td>
+                <td>{{ form.code }}</td>
+            </tr>
+            <tr>
+                <td>Lat:</td>
+                <td><input type='textfield' name='lat' id='lat' class="point"/></td>
+            </tr>
+            <tr>
+                <td>Lon:</td>
+                <td><input type='textfield' name='lon' id='lon' class="point"/></td>
+            </tr>
+            <tr>
+                <td>{{ form.move_choice }}Move:
+                <td>{{ form.position }} &nbsp;&nbsp;&nbsp;Of:{{ form.target }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type='submit' value='update' disabled="disabled" data-disable_with="Editing..."
+id="edit_submit" name="update" class="confirm"/><a
+                        href="simple_locations/cancel">&nbsp;&nbsp;&nbsp;Cancel</a></td>
+
+
+            </tr>
+            </form>
+        </table>
+    </div>
+
+
+
+
+
+
+
+    </div>
+
+
+
+{% endblock %}
+

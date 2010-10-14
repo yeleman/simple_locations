@@ -1,0 +1,114 @@
+{% extends "layout-split-2.html" %}
+{% block title %}Locations - {{ block.super }}{% endblock %}
+ {% load uni_form_tags %}
+ {% load forms_tags %}
+    
+    
+{% block stylesheets %}
+{{ block.super }}
+
+
+{% endblock %}
+
+{% block javascripts %}
+{{ block.super }}
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key={{map_key}}" type="text/javascript">
+</script>
+<script language="javascript">
+	//make sure map is a global variable
+	var map;
+  $(document).ready(function() {
+    
+    $("#tree a ").hover(function() { 
+	
+	
+	$(this).find('img').show();
+		},function(){ $(this).find('img').hide();}
+		
+	
+	
+	);
+       
+    });
+	
+	
+	function edit(area_id){	
+		 $.ajax({
+        type: "GET",
+        url:"/simple_locations/edit/"+area_id,
+        dataType: "json",
+        success: function(data){
+			var point = new GLatLng(parseFloat(data['lat']),parseFloat(data['lon']));
+			$('#id_name')[0].value=data['name'];
+             $('#id_code')[0].value=data['code'];
+			 $('#id_pk')[0].value=data['pk'];
+			 
+			map.setCenter(point,4);
+			
+		
+	}
+	
+	
+	});
+	
+	}
+	
+
+
+</script>
+ 
+{{form.media}}
+
+ <link rel="stylesheet" href="{{ MEDIA_URL }}simple_locations/uni_form/uni-form.css" type="text/css" />
+    <link rel="stylesheet" href="{{ MEDIA_URL }}simple_locations/uni_form/default.uni-form.css" type="text/css" />
+    <script src="{{ MEDIA_URL }}simple_locations/uni_form/uni-form.jquery.js" type="text/javascript"></script>
+{% endblock %}
+<form method="Post" action="/simple_locations/edit">
+{% block left %}
+{% load uni_form_tags %}
+    
+        {% uni_form form%}
+
+
+   
+	<div class="module" style="min-height:220px;">
+		 <h2>All Locations</h2>
+	
+	{{form.location}}
+	{{form.pk}}
+
+     
+	  </div>
+	  <div class="module" style="width:800px; clear:both;float:left;margin-top:10px;">
+      <h2 style="width:800px;">Location Details</h2>
+			
+				{{form.point}}
+				</div>
+				  {{form.errors}}
+	  {% endblock %}
+	
+	  {% block right %}
+	  <div class="module" style="padding-bottom:10px;">
+      <h2>Location Details</h2>
+	  
+	  <ul style="list-style:none;">
+		<li>Name: {{form.name}}</li>
+		<li>Code: {{form.code}}</li>
+		<li>Lat:<input  type='textfield' name='lat' id='lat'></li>
+		<li>Lon:<input type='textfield' name='lon' id='lon'></li>
+		
+		</ul>
+		</div>
+		
+		
+				
+				
+		 </form>
+  
+	
+	</div>
+	
+
+	
+{% endblock %}
+

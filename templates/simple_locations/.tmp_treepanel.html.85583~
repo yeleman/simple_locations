@@ -1,0 +1,24 @@
+
+	
+{% load mptt_tags %}
+<ul class="root" id="tree">
+{% recursetree nodes %}
+  <li {% if node.level > 1 %}style="display:none;"{% endif %}>
+  <input type='checkbox' id="{{ node.id }}" value="{{ node.id }}" name='location'/><a id="anchor_{{ node.id }}" href='javascript:void(0)'>{{ node.name }}</a></input>
+   <script type="text/javascript" >
+		children[{{ node.id }}] = [{% for child in node.get_children %}{{ child.id }},{% endfor %}];
+		{% if node.parent %}
+	
+			parent[{{ node.id }}]="{{ node.parent.id }}";
+		
+		{% endif %}
+	</script>
+	{% if not node.is_leaf_node %}
+                    <ul class="children">
+                        {{ children }}
+                    </ul>
+                {% endif %}
+   
+   </li>
+{% endrecursetree %}
+</ul>

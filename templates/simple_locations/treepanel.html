@@ -1,12 +1,5 @@
 {% load mptt_tags %}
-
-<ul class="root" id="tree">
-<script type="text/javascript">
-
-
-
-        </script>
-    {% recursetree nodes %}
+{% recursetree nodes %}
     <li>
         <input style="display:none;"
                type='checkbox'
@@ -19,8 +12,18 @@
             <img style="display:none;cursor:pointer;" border='0' class="confirm delete"
                  del_func="node_delete({{node.id}})" src='/static/simple_locations/images/delete.png'/>
         </a>
-
-              <script type="text/javascript">
+        <script type="text/javascript">
+          $('#anchor_{{ node.id }}').hover(
+            function() {
+              $(this).find('img').show();
+            },
+            function() {
+              $(this).find('img').hide();
+            }
+          );
+        </script>
+        <!-- load the tree dictionaries for parent-child and child-parent lookups -->
+        <script type="text/javascript">
             children[{{ node.id }}] = [{% for child in node.get_children %}{{ child.id }},{% endfor %}];
             {% if node.parent %}
                 parent[{{ node.id }}] = "{{ node.parent.id }}";
@@ -40,5 +43,5 @@
         </ul>
 
     </li>
-    {% endrecursetree %}
-</ul>
+{% endrecursetree %}
+

@@ -11,6 +11,13 @@ import mptt
 from mptt.models import MPTTModel
 
 
+try:
+    from mptt.models import MPTTModel
+except ImportError:
+    # django-mptt < 0.4
+    MPTTModel = models.Model
+
+
 class Point(models.Model):
     class Meta:
         verbose_name = __("Point")
@@ -38,6 +45,7 @@ class AreaType(models.Model):
 
 
 class Area(MPTTModel):
+
     class Meta:
         unique_together = ('code', 'kind')
         verbose_name = __("Area")
@@ -47,15 +55,15 @@ class Area(MPTTModel):
         parent_attr = 'parent'
         order_insertion_by = ['name']
 
+
     name = models.CharField(max_length=100)
     code = CodeField(max_length=50, prefix='A', default='0', \
                      min_length=3)
     kind = models.ForeignKey('AreaType', blank=True, null=True)
     location = models.ForeignKey(Point, blank=True, null=True)
-    parent = models.ForeignKey('Area', blank=True, null=True, \
+    parent = models.ForeignKey('self', blank=True, null=True, \
                                related_name='children')
 
     def delete(self):
         super(Area, self).delete()
-
 

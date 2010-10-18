@@ -12,7 +12,6 @@ from django.conf import settings
 from mptt.forms import TreeNodeChoiceField
 
 class LocationForm(forms.Form):
-    # FIXME: do the necessary custom validation
     name = forms.CharField(max_length=100)
     code = forms.CharField(max_length=50) # FIXME: code shouldn't be required, but should rather be auto-generated if not provided
     pk = forms.CharField(widget=forms.HiddenInput(), required=False)
@@ -23,5 +22,13 @@ class LocationForm(forms.Form):
     move_choice = forms.BooleanField(required=False)
     position = forms.ChoiceField(choices=(('last-child', 'inside'), ('left', 'before'), ('right', 'after')),
                                  required=False)
+    def clean_lat_lon(self):
+        """ make sure that both lat and lon are provided. if lat is given then lon is also required and vice versa.  """
+        lat=self.cleaned_data['lat']
+        lon=self.cleaned_data['lon']
+        if lat is None or lon is None:
+            raise forms.ValidationError("Please provide both lat and lon")
+           
+        return (lat,lon)
 
 

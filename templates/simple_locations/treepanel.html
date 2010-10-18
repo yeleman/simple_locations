@@ -1,44 +1,51 @@
+<ul class="root">
 {% load mptt_tags %}
-
-<ul class="root" id="tree">
-<script type="text/javascript">
-
-
-
-        </script>
-    {% recursetree nodes %}
-    <li>
-        <input style="display:none;"
-               type='checkbox'
-               id="{{ node.id }}"
-               value="{{ node.id }}"
-               name='location'/>
-        <a id="anchor_{{ node.id }}"
-           style="padding-left:5px;" onClick="edit({{node.id}})" href='javascript:void(0)'>
-            {{ node.name }}
-            <img style="display:none;cursor:pointer;" border='0' class="confirm delete"
-                 del_func="node_delete({{node.id}})" src='/static/simple_locations/images/delete.png'/>
-        </a>
-
-              <script type="text/javascript">
-            children[{{ node.id }}] = [{% for child in node.get_children %}{{ child.id }},{% endfor %}];
-            {% if node.parent %}
-                parent[{{ node.id }}] = "{{ node.parent.id }}";
-            {% endif %}
-        </script>
-        <ul class="children">
-            {% if not node.is_leaf_node %}
-                {{ children }}
-            {% endif %}
-            <li>
-                <a
-                        style="font-size:10px;padding-left:5px;"
-                        href="javascript:void(0)"
-                        onClick="add_node({{node.id}})">
-                    Add New</a>
-            </li>
-        </ul>
-
-    </li>
-    {% endrecursetree %}
+{% recursetree nodes %}
+  <li>
+      <!-- FIXME: re-incorporate expand-collapse with silk icons for expand and collapse -->
+      <!-- FIXME: Why is this input needed here? -->
+      <input style="display:none;"
+             type='checkbox'
+             id="{{ node.id }}"
+             value="{{ node.id }}"
+             name='location'/>
+      <span id="span_{{ node.id }}">
+      <a id="anchor_{{ node.id }}"
+         style="padding-left:5px;" onClick="load_edit_location({{ node.id }})" href='javascript:void(0)'>
+          {{ node.name }}
+      </a>
+      <img style="display:none;cursor:pointer;" border='0' 
+           onclick="delete_location({{ node.id }})" src='/static/simple_locations/images/delete.png'/>      
+      </span>
+      <script type="text/javascript">
+        $('#span_{{ node.id }}').hover(
+          function() {
+            $(this).find('img').show();
+          },
+          function() {
+            $(this).find('img').hide();
+          }
+        );
+      </script>
+      <!--  FIXME: are these dictionaries needed? -->
+      <!-- load the tree dictionaries for parent-child and child-parent lookups -->
+      <script type="text/javascript">
+          children[{{ node.id }}] = [{% for child in node.get_children %}{{ child.id }},{% endfor %}];
+          {% if node.parent %}
+              parent[{{ node.id }}] = "{{ node.parent.id }}";
+          {% endif %}
+      </script>
+      <ul class="children">
+          {% if not node.is_leaf_node %}
+              {{ children }}
+          {% endif %}
+          <li>
+              <a style="font-size:10px;padding-left:5px;"
+                 href="javascript:load_add_location_child({{ node.id }})">
+                  Add New
+              </a>
+          </li>
+      </ul>
+  </li>
+{% endrecursetree %}
 </ul>

@@ -3,9 +3,11 @@
 # maintainer rgaudin
 
 from django.contrib import admin
+from django import forms
+from mptt.admin import MPTTModelAdmin
+
 from models import Point, AreaType, Area
-
-
+from mptt.admin import MPTTChangeList
 class PointAdmin(admin.ModelAdmin):
     list_display = ('id', 'latitude', 'longitude')
 
@@ -14,8 +16,8 @@ class AreaTypeAdmin(admin.ModelAdmin):
     list_display = ('slug', 'name')
 
 
-class AreaAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'name', 'kind', 'location', 'code', 'parent')
+class AreaAdmin(MPTTModelAdmin):
+    list_display = ( 'name', 'kind', 'location', 'code')
     search_fields = ['code', 'name']
     list_filter = ('kind',)
 

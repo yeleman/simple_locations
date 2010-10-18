@@ -1,121 +1,44 @@
-/* function to delete node dynamically */
+      //make sure map is a global variable
+      var map;
 
-
-function node_delete(area_id) {
-    $.ajax({
-        type: "GET",
-        url:"/simple_locations/delete/" + area_id,
-        dataType: "html",
-        success: function(data) {
-            //location.reload();
-             $('.scrollable').html(data);
-        }
-    });
-}
-
-function reload_tree(){
-    var e = new Date().getTime();
-    var url = "/simple_locations/render_tree/"+"?" + e;
-
-    $.ajax({
-        type: "GET",
-        url:url,
-        dataType: "html",
-        success: function(data) {
-
-             $('.scrollable').html(data);
-
-        }  ,
-
-    });
-
-
-}
-function add_node(area_id) {
-    {
-        $.ajax({
-            type: "GET",
-            url:"/simple_locations/edit/" + area_id + "/?new=true",
-            dataType: "json",
-            success: function(data) {
-                reload_tree();
-                var point = new GLatLng(parseFloat(data['lat']), parseFloat(data['lon']));
-                $('#id_name')[0].value = data['name'];
-                $('#id_code')[0].value = data['code'];
-                $('#id_pk')[0].value = data['pk'];
-                map.setCenter(point, 4);
-                $('#edit_submit').attr('disabled', false);
-                $('#edit_submit').attr('value', 'save');
-            }
-        });
-    }
-
-
-}
-function edit(area_id) {
-    var e = new Date().getTime(0);
-    var url = "/simple_locations/edit/" + area_id + "/?" + e;
-    $.ajax({
-        type: "GET",
-        url:url,
-        dataType: "json",
-        success: function(data) {
-            var point = new GLatLng(parseFloat(data['lat']), parseFloat(data['lon']));
-            $('#id_name')[0].value = data['name'];
-            $('#id_code')[0].value = data['code'];
-            $('#id_pk')[0].value = data['pk'];
-            map.setCenter(point, 4);
-            $('#edit_submit').attr('disabled', false);
-
-
-        }
-    });
-}
-jQuery(function($) {
-    //generic comfirm
-    $(".confirm").click(function() {
-        if (confirm("Are you sure?")) {
-            if ($(this).hasClass('delete')) {
-                eval($(this).attr('del_func'));
-                return false;
-            }
-
-
-            // go ahead
-        } else {
-
-            return false;
-        }
-    });
-
-
-    $('.point').change(function() {
-
-        var point = new GLatLng(parseFloat($('#lat')[0].value), parseFloat($('#lon')[0].value));
-        map.setCenter(point, 4);
-    }
-
-            );
-
-    $('form[data-remote=true]').live('submit', function() {
-        url = this.action;
-        type = this.method;
-        data = $(this).serialize();
-
-        $.ajax({
-            type: type,
-            url:url,
-            dataType: "html",
-            data:data,
-            success: function(data) {
-               $('.scrollable').load('/simple_locations/render_tree');
-
-            }
-        });
-
-        return false;
-    });
-
-
-}
-        );
+      function refresh_tree() {
+        $('#tree').load('/simple_locations/render_tree/');
+      }
+      
+      function load_add_location() {
+        $('#edit_location').load('/simple_locations/add/');      
+      }
+      
+      function load_add_location_child(location_id) {
+        $('#edit_location').load('/simple_locations/add/' + location_id + '/');
+      }
+      
+      function load_edit_location(location_id) {
+        $('#edit_location').load('/simple_locations/edit/' + location_id + '/');
+      }
+      
+      function add_location(link) {
+          form = $(link).parents("form");
+          form_data = form.serializeArray();
+          $('#edit_location').load(form.attr("action"), form_data, function() { refresh_tree() });      
+      }
+      
+      function save_location(link) {
+          form = $(link).parents("form");
+          form_data = form.serializeArray();
+          $('#edit_location').load(form.attr("action"), form_data, function() { refresh_tree() });
+      }
+      
+      function delete_location(location_id) {
+        $.ajax({'async':false,
+              'cache':false,
+              'type':'POST',
+              'url':'/simple_locations/delete/' + location_id + '/',
+              'success': function() { refresh_tree(); load_add_location(); }  
+             });
+      }
+      
+      $(document).ready(function() {
+        refresh_tree();
+        load_add_location();        
+      });

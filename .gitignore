@@ -2,6 +2,7 @@
 *.db
 *.sqlite*
 ~*
+*~
 *.orig
 private
 *.log

@@ -7,7 +7,6 @@ from django import forms
 from mptt.admin import MPTTModelAdmin
 
 from models import Point, AreaType, Area
-from simple_locations.forms import locationTreeWidget
 from mptt.admin import MPTTChangeList
 class PointAdmin(admin.ModelAdmin):
     list_display = ('id', 'latitude', 'longitude')
@@ -21,10 +20,6 @@ class AreaAdmin(MPTTModelAdmin):
     list_display = ( 'name', 'kind', 'location', 'code')
     search_fields = ['code', 'name']
     list_filter = ('kind',)
-    
-    
-
-
     
 admin.site.register(Point, PointAdmin)
 admin.site.register(AreaType, AreaTypeAdmin)

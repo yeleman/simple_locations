@@ -22,6 +22,7 @@ def simple_locations(request):
     MEDIA_URL = settings.MEDIA_URL
     form = LocationForm()
     nodes=Area.tree.all()
+    # FIXME: MEDIA_URL may not need to be passed, check?
     return render_to_response(
           'simple_locations/index.html', 
           {'form' : form,

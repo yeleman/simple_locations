@@ -49,7 +49,11 @@ class LocationForm(forms.Form):
                 self._errors["lon"]=ErrorList([msg])
                 return ''
         if not code:
-            self.cleaned_data['code']=generate_tracking_tag(Area.objects.order_by('-pk')[0].code)
+            try:
+                self.cleaned_data['code']=generate_tracking_tag(Area.objects.order_by('-pk')[0].code)
+            except:
+                self.cleaned_data['code']=generate_tracking_tag()
+
         else:
             self.cleaned_data['code']='2'+code
             

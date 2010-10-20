@@ -2,38 +2,25 @@
 
 <ul class="root" id="tree">
     {% recursetree nodes %}
-
-    <li id="test">
-     
+    <li>
       <span id="span_{{ node.id }}"  {% if not node.is_leaf_node %}class="collapse"{%endif%}  >
       <a id="anchor_{{ node.id }}"
          style="padding-left:5px;" onClick="load_edit_location({{ node.id }})" href='javascript:void(0)'>
           {{ node.name }}
       </a>
-	  <script type="text/javascript">
-          $('#anchor_{{ node.id }}').(
-                  function() {
-                      $(this).find('img').show();
-                  },
-                  function() {
-                      $(this).find('img').hide();
-                  }
-                  );
-      </script>
       <img style="display:none;cursor:pointer;" border='0'
            onclick="delete_location({{ node.id }})" src='/static/simple_locations/images/delete.png'/>      
       </span>
         <script type="text/javascript">
             $('#span_{{ node.id }}').hover(
-                    function() {
-                        $(this).find('img').show();
-                    },
-                    function() {
-                        $(this).find('img').hide();
-                    }
-                    );
+                function() {
+                    $(this).find('img').show();
+                },
+                function() {
+                    $(this).find('img').hide();
+                }
+            );
         </script>
-
         <ul class="children" style="display:none;">
             {% if not node.is_leaf_node %}
             {{ children }}
@@ -45,46 +32,36 @@
                 </a>
             </li>
         </ul>
-     
+
         {% endrecursetree %}
     </li>
     <script language="javascript">
         collapse();
         function expand() {
-
-            $('span.expand').css('background-image', '/static/simple_locations/images/minus.gif').each(function() {
-                $(this).click(function()
-                {
-                    $(this).next().hide();
-                    $(this).removeClass('expand').addClass('collapse');
-                    collapse();
-
+            $('span.expand').css('background-image', '/static/simple_locations/images/minus.gif').each(
+                function() {
+                    $(this).click(
+                        function() {
+                            $(this).next().hide();
+                            $(this).removeClass('expand').addClass('collapse');
+                            collapse();
+                        }
+                    );
                 }
-
-
-                        );
-
-
-            });
+            );
         }
-        function collapse()
-        {
-            $('span.collapse').css('background-image', '/static/simple_locations/images/plus.gif').each(function() {
-                $(this).click(function()
-                {
-                    $(this).next().show();
-                    $(this).removeClass('collapse').addClass('expand');
-                    expand();
-
-
+        function collapse() {
+            $('span.collapse').css('background-image', '/static/simple_locations/images/plus.gif').each(
+                function() {
+                    $(this).click(
+                        function() {
+                            $(this).next().show();
+                            $(this).removeClass('collapse').addClass('expand');
+                            expand();
+                        }
+                    );
                 }
-
-
-                        );
-
-
-            });
+            );
         }
-
     </script>
 </ul>

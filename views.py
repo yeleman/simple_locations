@@ -3,6 +3,7 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from simple_locations.models import Area,Point
+from django.db import IntegrityError
 from django.conf import settings
 from django.utils import simplejson
 from django.http import HttpResponse
@@ -85,17 +86,23 @@ def edit_location(req, area_id):
     if req.method == 'POST':
         form = LocationForm(req.POST)
         if form.is_valid():
+            saved = True
             
             area = Area.objects.get(pk=area_id)
-            name = form.cleaned_data['name']
-            code = form.cleaned_data['code']
+            area.name = form.cleaned_data['name']
+            area.code = form.cleaned_data['code']
             lat=form.cleaned_data['lat']
             lon=form.cleaned_data['lon']
             if lat and lon:
                 location=Point(latitude=lat,longitude=lon)
                 location.save()
                 area.location=location
-            area.save()
+            try:
+                area.save()
+            except IntegrityError:
+                form.errors['code'] = 'This code already exists'
+                saved = False
+
             if form.cleaned_data['move_choice']:
                 target = form.cleaned_data['target']
                 position = form.cleaned_data['position']
@@ -103,8 +110,12 @@ def edit_location(req, area_id):
                 try:
                     Area.tree.move_node(area, target, position)
                 except InvalidMove:
-                    pass
-            return render_to_response("simple_locations/location_edit.html", {"form":LocationForm(), 'nodes':Area.tree.all()}, context_instance=RequestContext(req))
+                    form.errors['position'] = 'This move is invalid'
+                    saved = False
+
+            if saved:
+                form = LocationForm()
+            return render_to_response("simple_locations/location_edit.html", {"form":form, 'nodes':Area.tree.all()}, context_instance=RequestContext(req))
         else:
             return render_to_response("simple_locations/location_edit.html", 
                                       { 'form': form, 'item': location },

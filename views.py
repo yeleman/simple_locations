@@ -94,9 +94,9 @@ def edit_location(req, area_id):
             lat=form.cleaned_data['lat']
             lon=form.cleaned_data['lon']
             if lat and lon:
-                location=Point(latitude=lat,longitude=lon)
-                location.save()
-                area.location=location
+                point = Point(latitude=lat,longitude=lon)
+                point.save()
+                area.location = point
             try:
                 area.save()
             except IntegrityError:
@@ -115,7 +115,10 @@ def edit_location(req, area_id):
 
             if saved:
                 form = LocationForm()
-            return render_to_response("simple_locations/location_edit.html", {"form":form, 'nodes':Area.tree.all()}, context_instance=RequestContext(req))
+                return render_to_response("simple_locations/location_edit.html", {"form":form, 'nodes':Area.tree.all()}, context_instance=RequestContext(req))
+            else:
+                return render_to_response("simple_locations/location_edit.html", {"form":form, 'item': location, 'nodes':Area.tree.all()}, context_instance=RequestContext(req))
+            
         else:
             return render_to_response("simple_locations/location_edit.html", 
                                       { 'form': form, 'item': location },

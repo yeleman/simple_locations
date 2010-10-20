@@ -35,7 +35,7 @@ def add_location(req, parent_id=None):
     if req.method == 'POST':
         form = LocationForm(req.POST)
         if form.is_valid():
-        
+
             name = form.cleaned_data['name']
             code = form.cleaned_data['code']
             lat=form.cleaned_data['lat']
@@ -43,10 +43,12 @@ def add_location(req, parent_id=None):
             target = form.cleaned_data['target']
             position = form.cleaned_data['position']
             
-            location=Point(latitude=lat,longitude=lon)
-            location.save()
+            
             area=Area(name=name,code=code)
-            area.location=location
+            if lat and lon:
+                location=Point(latitude=lat,longitude=lon)
+                location.save()
+                area.location=location
             area.save()
             if form.cleaned_data['move_choice']:
                 try:
@@ -89,10 +91,10 @@ def edit_location(req, area_id):
             code = form.cleaned_data['code']
             lat=form.cleaned_data['lat']
             lon=form.cleaned_data['lon']
-            location=Point(latitude=lat,longitude=lon)
-            location.save()
-            area.location=location
-            area.location.save()
+            if lat and lon:
+                location=Point(latitude=lat,longitude=lon)
+                location.save()
+                area.location=location
             area.save()
             if form.cleaned_data['move_choice']:
                 target = form.cleaned_data['target']

@@ -40,6 +40,12 @@ ul.hidden{
 	padding-left:-4px;
 	
 	}
+
+#tree img.add_delete{
+   margin-left:-5px;
+   background-color: white;
+
+}
 	
 #tree .collapse{
 	background: url(../images/plus.gif) 0px 0px no-repeat;
@@ -128,9 +134,14 @@ body > *[selected="true"] {
     width:16px;
     height:16px;
 }
-span.errors{
+.errors{
 color: #f00;
 font-style: italic;
 font-weight: bold;
+list-style:none;
+font-size:10px;
 	
+}
+img.delete{
+   margin-bottom:-3px;
 }

@@ -3,65 +3,64 @@
 <ul class="root" id="tree">
     {% recursetree nodes %}
     <li>
-      <span id="span_{{ node.id }}"  {% if not node.is_leaf_node %}class="collapse"{%endif%}  >
+      <span id="span_{{ node.id }}"    >
+        {% if not node.is_leaf_node%}
+        <img src="/static/simple_locations/images/plus.gif" onclick="expand_collapse()" class="add_delete"/>
+          {%endif%}
       <a id="anchor_{{ node.id }}"
          style="padding-left:5px;" onClick="load_edit_location({{ node.id }})" href='javascript:void(0)'>
           {{ node.name }}
       </a>
       <img style="display:none;cursor:pointer;" border='0'
-           onclick="delete_location({{ node.id }})" src='/static/simple_locations/images/delete.png'/>      
+           onclick="delete_location({{ node.id }})" src='/static/simple_locations/images/delete.png' class="delete"/>      
       </span>
         <script type="text/javascript">
             $('#span_{{ node.id }}').hover(
                 function() {
-                    $(this).find('img').show();
+                    $(this).find('img[class=delete]').show();
                 },
                 function() {
-                    $(this).find('img').hide();
+                    $(this).find('img[class=delete]').hide();
                 }
             );
         </script>
-        <ul class="children" style="display:none;">
+        <ul class="children" style="display:none;" >
             {% if not node.is_leaf_node %}
             {{ children }}
             {% endif %}
-            <li >
+            
+        </ul>
+        <li >
                 <a style="font-size:10px;padding-left:5px;"
                    href="javascript:load_add_location_child({{ node.id }})" id="add_{{ node.id }}">
                     Add New
                 </a>
-            </li>
-        </ul>
+         </li>
 
-        {% endrecursetree %}
+
     </li>
+    {% endrecursetree %}
+    
     <script language="javascript">
-        collapse();
-        function expand() {
-            $('span.expand').css('background-image', '/static/simple_locations/images/minus.gif').each(
-                function() {
-                    $(this).click(
-                        function() {
-                            $(this).next().hide();
-                            $(this).removeClass('expand').addClass('collapse');
-                            collapse();
-                        }
-                    );
-                }
-            );
+        function expand_collapse(){
+            $("img.add_delete").click(function() {
+
+               if ($(this).attr('src')=='/static/simple_locations/images/plus.gif' )
+               {
+
+                   $(this).parent().next().show();
+                 $(this).attr('src','/static/simple_locations/images/minus.gif');
+               }
+                else   if ($(this).attr('src')=='/static/simple_locations/images/minus.gif' )
+               {
+
+                   $(this).parent().next().hide();
+                     $(this).attr('src','/static/simple_locations/images/plus.gif');
+                   
+               }
+            });
+            
         }
-        function collapse() {
-            $('span.collapse').css('background-image', '/static/simple_locations/images/plus.gif').each(
-                function() {
-                    $(this).click(
-                        function() {
-                            $(this).next().show();
-                            $(this).removeClass('collapse').addClass('expand');
-                            expand();
-                        }
-                    );
-                }
-            );
-        }
+        
     </script>
 </ul>

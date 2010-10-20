@@ -30,15 +30,21 @@
       }
       
       function delete_location(location_id) {
+    	  if (confirm("Are you sure?")) {
         $.ajax({'async':false,
               'cache':false,
               'type':'POST',
               'url':'/simple_locations/delete/' + location_id + '/',
               'success': function() { refresh_tree(); load_add_location(); }  
              });
+    	  } else {
+    		  return false;
+    		  
+    	  }
       }
       
       $(document).ready(function() {
         refresh_tree();
-        load_add_location();        
+        load_add_location();   
+       
       });

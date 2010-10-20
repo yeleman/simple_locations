@@ -31,12 +31,10 @@ def simple_locations(request):
 
 def add_location(req, parent_id=None):
     nodes = Area.tree.all()
-    form_errors=True
         
     if req.method == 'POST':
         form = LocationForm(req.POST)
         if form.is_valid():
-
             name = form.cleaned_data['name']
             code = form.cleaned_data['code']
             lat=form.cleaned_data['lat']
@@ -57,10 +55,22 @@ def add_location(req, parent_id=None):
                 except InvalidMove:
                     pass 
             form = LocationForm()
+
+
             return render_to_response(
-        'simple_locations/location_edit.html'
-        ,{'form': form, 'nodes': nodes},
-        context_instance=RequestContext(req)) 
+            'simple_locations/location_edit.html'
+            ,{'form': form, 'nodes': nodes},
+            context_instance=RequestContext(req))
+        else:
+            form = LocationForm(req.POST)
+            return render_to_response(
+            'simple_locations/location_edit.html'
+            ,{'form': form, 'nodes': nodes},
+            context_instance=RequestContext(req))
+
+
+
+
             
     else:
         if (parent_id):
@@ -70,14 +80,15 @@ def add_location(req, parent_id=None):
             default_data['target'] = parent.pk
             default_data['position'] = 'last-child'
             form = LocationForm(default_data)
-            form_errors=True
+            form._errors=''
+            
             
         else:
             form = LocationForm()
 
     return render_to_response(
         'simple_locations/location_edit.html'
-        ,{'form': form, 'nodes': nodes,'form_errors':form_errors},
+        ,{'form': form, 'nodes': nodes},
         context_instance=RequestContext(req))    
     
 
@@ -149,5 +160,5 @@ def delete_location(request, area_id):
 
 @cache_control(no_cache=True)
 def render_location(request):
-    nodes = Area.tree.all()
+    nodes = Area.objects.all()
     return render_to_response('simple_locations/treepanel.html',{'nodes':nodes})

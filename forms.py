@@ -32,7 +32,12 @@ class LocationForm(forms.Form):
             raise forms.ValidationError("Please provide both lat and lon")
         elif lat and not lon:
             raise forms.ValidationError("Please provide both lat and lon")
-          
+        if (lat <=90 and lat>=-90 ) :
+            raise forms.ValidationError("Invalide latitude must be between 90 and -90")
+        if (lon <=180 and lat>=-180 ) :
+            
+            raise forms.ValidationError("Invalide longititude must be between 180 and -180")
+
         return self.cleaned_data
     
     

@@ -37,7 +37,7 @@ class LocationForm(forms.Form):
             return ''
         elif lat and not lon:
             msg=u"Please provide the longitude"
-            self._errors["lat"]=ErrorList([msg])
+            self._errors["lon"]=ErrorList([msg])
             return ''
         if lat and lon:
             if (lat not in xrange(-90,91) ) :

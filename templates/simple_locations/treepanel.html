@@ -5,7 +5,7 @@
     <li>
       <span id="span_{{ node.id }}"    >
         {% if not node.is_leaf_node%}
-        <img src="/static/simple_locations/images/plus.gif" onclick="expand_collapse()" class="add_delete"/>
+        <img src="/static/simple_locations/images/plus.gif" onclick="expand_collapse(this)" class="add_delete"/>
           {%endif%}
       <a id="anchor_{{ node.id }}"
          style="padding-left:5px;" onClick="load_edit_location({{ node.id }})" href='javascript:void(0)'>
@@ -43,24 +43,14 @@
     
     <script language="javascript">
         function expand_collapse(){
-            $("img.add_delete").click(function() {
-
-               if ($(this).attr('src')=='/static/simple_locations/images/plus.gif' )
-               {
-
-                   $(this).parent().next().show();
-                 $(this).attr('src','/static/simple_locations/images/minus.gif');
-               }
-                else   if ($(this).attr('src')=='/static/simple_locations/images/minus.gif' )
-               {
-
-                   $(this).parent().next().hide();
-                     $(this).attr('src','/static/simple_locations/images/plus.gif');
-                   
-               }
-            });
-            
+            if ($(this).attr('src')=='/static/simple_locations/images/plus.gif') {
+                $(this).parent().next().show();
+                $(this).attr('src','/static/simple_locations/images/minus.gif');
+            }
+            else if ($(this).attr('src')=='/static/simple_locations/images/minus.gif' ) {
+                $(this).parent().next().hide();
+                $(this).attr('src','/static/simple_locations/images/plus.gif');    
+            }
         }
-        
     </script>
 </ul>

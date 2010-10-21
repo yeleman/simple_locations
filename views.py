@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from simple_locations.models import Area,Point
+from simple_locations.models import Area,Point,AreaType
 from django.db import IntegrityError
 from django.conf import settings
 from django.utils import simplejson
@@ -41,6 +41,7 @@ def add_location(req, parent_id=None):
             lon=form.cleaned_data['lon']
             target = form.cleaned_data['target']
             position = form.cleaned_data['position']
+            kind=form.cleaned_data['kind']
             
             
             area=Area(name=name,code=code)
@@ -48,6 +49,11 @@ def add_location(req, parent_id=None):
                 location=Point(latitude=lat,longitude=lon)
                 location.save()
                 area.location=location
+            try:
+                get_object_or_404(AreaType,pk=int(kind))
+                area.kind=kind
+            except ValueError:
+                pass
             area.save()
             if form.cleaned_data['move_choice']:
                 try:
@@ -104,6 +110,12 @@ def edit_location(req, area_id):
             area.code = form.cleaned_data['code']
             lat=form.cleaned_data['lat']
             lon=form.cleaned_data['lon']
+            kind=form.cleaned_data['kind']
+            try:
+                kind= get_object_or_404(AreaType,pk=int(kind))
+                area.kind=kind
+            except ValueError:
+                area.kind=None
             if lat and lon:
                 point = Point(latitude=lat,longitude=lon)
                 point.save()

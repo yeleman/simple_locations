@@ -14,6 +14,7 @@ from django.forms.util import ErrorList
 from code_generator.code_generator import generate_tracking_tag
 
 
+
 class LocationForm(forms.Form):
     name = forms.CharField(max_length=100)
     code = forms.CharField(max_length=50,required=False) 
@@ -40,11 +41,11 @@ class LocationForm(forms.Form):
             self._errors["lon"]=ErrorList([msg])
             return ''
         if lat and lon:
-            if not (int(lat)  in xrange(-90,91) ) :
+            if not -90 <= lat <= 90 :
                 msg=u'Invalid latitude must be between 90 and -90'
                 self._errors["lat"]=ErrorList([msg])
                 return ''
-            if not (int(lon)  in xrange(-180,181) ) :
+            if not -180 <= lon <=180 :
                 msg=u'Invalid latitude must be between 180 and -180'
                 self._errors["lon"]=ErrorList([msg])
                 return ''

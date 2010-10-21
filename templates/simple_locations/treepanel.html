@@ -5,7 +5,7 @@
     <li>
       <span id="span_{{ node.id }}"    >
         {% if not node.is_leaf_node%}
-        <img src="/static/simple_locations/images/plus.gif" onclick="expand_collapse(this)" class="add_delete"/>
+        <img id="expand_{{ node.id }}" src="/static/simple_locations/images/plus.gif" onclick="expand_collapse({{ node.id }})" class="add_delete"/>
           {%endif%}
       <a id="anchor_{{ node.id }}"
          style="padding-left:5px;" onClick="load_edit_location({{ node.id }})" href='javascript:void(0)'>
@@ -42,14 +42,15 @@
     {% endrecursetree %}
     
     <script language="javascript">
-        function expand_collapse(){
-            if ($(this).attr('src')=='/static/simple_locations/images/plus.gif') {
-                $(this).parent().next().show();
-                $(this).attr('src','/static/simple_locations/images/minus.gif');
+        function expand_collapse(id){
+            img_tag = $('#expand_' + id);
+            if (img_tag.attr('src')=='/static/simple_locations/images/plus.gif') {
+                img_tag.parent().next().show();
+                img_tag.attr('src','/static/simple_locations/images/minus.gif');
             }
-            else if ($(this).attr('src')=='/static/simple_locations/images/minus.gif' ) {
-                $(this).parent().next().hide();
-                $(this).attr('src','/static/simple_locations/images/plus.gif');    
+            else if (img_tag.attr('src')=='/static/simple_locations/images/minus.gif' ) {
+                img_tag.parent().next().hide();
+                img_tag.attr('src','/static/simple_locations/images/plus.gif');    
             }
         }
     </script>

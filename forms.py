@@ -40,11 +40,11 @@ class LocationForm(forms.Form):
             self._errors["lon"]=ErrorList([msg])
             return ''
         if lat and lon:
-            if (lat not in xrange(-90,91) ) :
+            if not (int(lat)  in xrange(-90,91) ) :
                 msg=u'Invalid latitude must be between 90 and -90'
                 self._errors["lat"]=ErrorList([msg])
                 return ''
-            if (lon not in xrange(-180,181) ) :
+            if not (int(lon)  in xrange(-180,181) ) :
                 msg=u'Invalid latitude must be between 180 and -180'
                 self._errors["lon"]=ErrorList([msg])
                 return ''
